@@ -15,7 +15,7 @@ app.use(express.static('public'));
 
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/", function (req, res) {
-  res.sendFile(__dirname + '/views/index.html');
+  res.sendFile(__dirname + '/index.html');
 });
 
 
@@ -24,7 +24,15 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
-
+// getting the date in unix and UTC formats 
+app.get("/api/timestamp/:date", function (req, res) {
+  const date = new Date(req.params.date)
+  const response = {
+    unix: date.getTime(),
+    utc: date.toUTCString()
+  }
+  res.json(response);
+});
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
