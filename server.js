@@ -24,12 +24,36 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
-// getting the date in unix and UTC formats 
-app.get("/api/timestamp/:date", function (req, res) {
-  const date = new Date(req.params.date)
+// getting the current date in unix and UTC formats 
+app.get("/api/timestamp/", function (req, res) {
+  const date = new Date()
   const response = {
     unix: date.getTime(),
     utc: date.toUTCString()
+  }
+  res.json(response);
+});
+
+// getting the given date in unix and UTC formats 
+app.get("/api/timestamp/:date", function (req, res) {
+  const inputDateString = req.params.date
+  let date
+  // If it is all digits must be unix time
+  if (/^\d+$/.test(inputDateString)) {
+    date = new Date(parseInt(inputDateString))
+  } else {
+    date = new Date(inputDateString)
+  }
+
+  let response
+  if (date.toString() === 'Invalid Date') {
+    response = {error: 'Invalid Date'}
+  } 
+  else {
+    response = {
+      unix: date.getTime(),
+      utc: date.toUTCString()
+    }
   }
   res.json(response);
 });
